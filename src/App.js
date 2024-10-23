@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css'
 
-function App() {
+const PasswordStrengthChecker = () => {
+  const [password, setPassword] = useState('');
+  const [strength, setStrength] = useState('');
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    checkStrength(value);
+  };
+
+  const checkStrength = (password) => {
+    let strengthScore = 0;
+
+    // Length of the password (min 8 characters)
+    if (password.length >= 8) strengthScore += 1;
+
+    // Contains both lower and uppercase letters
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strengthScore += 1;
+
+    // Contains numbers
+    if (/\d/.test(password)) strengthScore += 1;
+
+    // Contains special characters
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strengthScore += 1;
+
+    // Determine the strength based on score
+    if (strengthScore <= 1) {
+      setStrength('Weak');
+    } else if (strengthScore === 2) {
+      setStrength('Medium');
+    } else if (strengthScore === 3) {
+      setStrength('Strong');
+    } else {
+      setStrength('Very Strong');
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="password-checker">
+      <h3>Password Strength Checker</h3>
+      <input
+        type="password"
+        value={password}
+        onChange={handlePasswordChange}
+        placeholder="Enter your password"
+      />
+      <div className={`strength ${strength.toLowerCase()}`}>
+        <p>Password strength: {strength}</p>
+      </div>
     </div>
   );
-}
+};
 
-export default App;
+export default PasswordStrengthChecker;
